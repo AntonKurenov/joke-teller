@@ -4,21 +4,19 @@ const radioOptions = document.querySelector('.radio-group');
 const enterButton = document.querySelector('.button-enter');
 const jokeText = document.querySelector('.text');
 const feedbackButtons = document.querySelector('.feedback');
-const voteUpButton = document.querySelector('.vote--up');
-const voteDownButton = document.querySelector('.vote--down');
+const likeButton = document.querySelector('.vote--up');
+const dislikeButton = document.querySelector('.vote--down');
 const url = 'https://v2.jokeapi.dev/joke/any';
 let isDark = true;
+let isPositivePressed = false;
+let isNegativePressed = false;
 
 function radioButtonsHandler(event) {
 	let target = event.target;
 	if (target.tagName !== 'INPUT') {
 		return;
 	}
-	if (target.value === 'radio-yes') {
-		isDark = true;
-	} else {
-		isDark = false;
-	}
+	isDark = target.value === 'radio-yes';
 	if (!enterButton.classList.contains('show')) {
 		enterButton.classList.add('show');
 	}
@@ -27,7 +25,6 @@ function radioButtonsHandler(event) {
 function placeJoke(data) {
 	if (data.type === 'twopart') {
 		let time = data.setup.split(' ').length * 190;
-		console.log('time = ', time);
 		jokeText.innerText = `${data.setup}\n.....`;
 		setTimeout(() => jokeText.innerText = `${data.setup}\n${data.delivery}`, time);
 	} else {
@@ -69,13 +66,22 @@ function fetchJoke() {
 
 function feedbackHandler(event) {
 	let ev = event.target;
-	if (event.target.tagName === 'BUTTON') {
-		event.target.classList.toggle('pressed');
-		return;
-	}
-	if (event.target.tagName === 'SPAN') {
-		event.target.parentElement.classList.toggle('pressed');
-		return;
+	if (ev.tagName === 'BUTTON') {
+		ev.classList.toggle('pressed');
+		if (ev.value === 'like') {
+			isPositivePressed = !isPositivePressed;
+			if (isNegativePressed) {
+				dislikeButton.classList.toggle('pressed');
+				isNegativePressed = false;
+			}
+		}
+		if (ev.value === 'dislike') {
+			isNegativePressed = !isNegativePressed;
+			if (isPositivePressed) {
+				likeButton.classList.toggle('pressed');
+				isPositivePressed = false;
+			}
+		}
 	}
 }
 

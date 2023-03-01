@@ -46,6 +46,7 @@ button {
     background-color: gold;
     border-radius: 4px;
     font-size: 2.3rem;
+    cursor: pointer;
 }
 
 .explicit-option {
@@ -109,7 +110,7 @@ label {
 
 .feedback {
     display: none;
-    justify-content: center;
+    justify-content: space-around;
     margin: 10px 0;
 }
 .feedback.show {
@@ -150,6 +151,11 @@ a {
 }
 a:hover {
     text-decoration: underline;
+}
+
+.fa-heart {
+    font-size: 4rem;
+    cursor: pointer;
 }
 
 @media (max-width: 640px) {

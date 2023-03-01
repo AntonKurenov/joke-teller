@@ -3,9 +3,11 @@ const yesButton = document.querySelector('.button-yes');
 const radioOptions = document.querySelector('.radio-group');
 const enterButton = document.querySelector('.button-enter');
 const jokeText = document.querySelector('.text');
-const feedbackButtons = document.querySelector('.feedback');
+const feedbackButtons = document.querySelector('.feedback-buttons');
+const feedbackDiv = document.querySelector('.feedback')
 const likeButton = document.querySelector('.vote--up');
 const dislikeButton = document.querySelector('.vote--down');
+const toFavoriteButton = document.querySelector('.fa-heart');
 const url = 'https://v2.jokeapi.dev/joke/any';
 let isDark = true;
 let isPositivePressed = false;
@@ -31,7 +33,7 @@ function placeJoke(data) {
 		jokeText.innerText = data.joke;
 	}
 	setTimeout(() => enterButton.innerText = 'Next joke >>', 700);
-	setTimeout(() => feedbackButtons.classList.toggle('show'), 1300);
+	setTimeout(() => feedbackDiv.classList.toggle('show'), 1300);
 }
 
 function placeError(error) {
@@ -41,8 +43,8 @@ function placeError(error) {
 }
 
 function fetchJoke() {
-	if (feedbackButtons.classList.contains('show')) {
-		feedbackButtons.classList.toggle('show');
+	if (feedbackDiv.classList.contains('show')) {
+		feedbackDiv.classList.toggle('show');
 	}
 	let addr = url;
 	if (!isDark) {
@@ -85,6 +87,12 @@ function feedbackHandler(event) {
 	}
 }
 
+function addToFavoriteHandler(event) {
+	console.log('favorite');
+	let ev = event.target;
+	toFavoriteButton.classList.toggle('fa-solid');
+}
+
 enterButton.addEventListener('click', fetchJoke);
 
 radioOptions.addEventListener('click', radioButtonsHandler);
@@ -95,3 +103,18 @@ yesButton.addEventListener("click", (event) => {
 })
 
 feedbackButtons.addEventListener('click', feedbackHandler);
+
+toFavoriteButton.addEventListener('click', addToFavoriteHandler);
+
+
+// function showMessage() {
+// 	if (cheeringPopup.classList.contains('show')) {
+// 		return ;
+// 	}
+// 	let text = motivationPhrases[Math.floor(Math.random() * motivationPhrases.length)];
+// 	cheeringPopup.innerText = text;
+// 	// let elemWidth = cheeringPopup.offsetWidth;
+// 	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
+// 	cheeringPopup.classList.toggle('show');
+// 	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
+// }

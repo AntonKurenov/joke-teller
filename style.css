@@ -136,9 +136,30 @@ label {
     background-color: firebrick;
 }
 
+.fa-star {
+    font-size: 4rem;
+    cursor: pointer;
+}
+
+.favorites {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.favorites-content {
+    display: none;
+    flex-direction: column;
+    flex: 1 0 auto;
+}
+
+.favorites-button__list {
+
+}
+
 .footer {
     text-align: center;
-    background-color: #737a7a;
+    background-color: #5f6464;
     padding: 10px;
     font-weight: bold;
     color: #f3d0d0;
@@ -151,11 +172,6 @@ a {
 }
 a:hover {
     text-decoration: underline;
-}
-
-.fa-heart {
-    font-size: 4rem;
-    cursor: pointer;
 }
 
 @media (max-width: 640px) {

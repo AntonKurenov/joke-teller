@@ -1,54 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Joke Teller</title>
-    <link href="style.css" rel="stylesheet" type="text/css"/>
-    <script defer src="script.js"></script>
-    <script src="https://kit.fontawesome.com/eb7d4cf45b.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Joke Teller</title>
+  <link href="style.css" rel="stylesheet" type="text/css"/>
+  <script defer src="script.js"></script>
+  <script defer src="favorites.js"></script>
+  <script src="https://kit.fontawesome.com/eb7d4cf45b.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="header">
-    Joke Teller
+  Joke Teller
 </div>
 <div class="content">
-    <div class="options-module">
-        <div class="question">Wanna joke?</div>
-        <div class="button-row">
-            <button class="button-yes">Yes</button>
-            <button class="button-no">No</button>
-        </div>
-        <div class="explicit-option">
-            <div class="explicit-question">Dark humour jokes included?</div>
-            <div class="radio-group">
-                <label for="radio-yes"><input type="radio" name="radio" value="radio-yes" id="radio-yes">Yes</label>
-                <label for="radio-no"><input type="radio" name="radio" value="radio-no" id="radio-no">No, thanks</label>
-            </div>
-        </div>
+  <div class="options-module">
+    <div class="question">Wanna joke?</div>
+    <div class="button-row">
+      <button class="button-yes">Yes</button>
+      <button class="button-no">No</button>
     </div>
-    <div class="last-button">
-        <button class="button-enter">
-            Let's go!
-        </button>
-
+    <div class="explicit-option">
+      <div class="explicit-question">Dark humour jokes included?</div>
+      <div class="radio-group">
+        <label for="radio-yes"><input type="radio" name="radio" value="radio-yes" id="radio-yes">Yes</label>
+        <label for="radio-no"><input type="radio" name="radio" value="radio-no" id="radio-no">No, thanks</label>
+      </div>
     </div>
-    <div class="joke-text">
-        <p class="text"></p>
+  </div>
+  <div class="last-button">
+    <button class="button-enter">
+      Let's go!
+    </button>
+  </div>
+  <div class="joke-text">
+    <p class="text" data-id="" data-safe=""></p>
+  </div>
+  <div class="feedback">
+    <div class="feedback-buttons">
+      <button class="vote vote--up" name="answer" value="like">^‿^</button>
+      <button class="vote vote--down" type="button" value="dislike">ˇ_ˇ</button>
     </div>
-    <div class="feedback">
-        <div class="feedback-buttons">
-            <button class="vote vote--up" name="answer" value="like">^‿^</button>
-            <button class="vote vote--down" type="button" value="dislike">ˇ_ˇ</button>
-        </div>
-            <i class="fa-regular fa-heart"></i>
-    </div>
+    <i class="fa-regular fa-star"></i>
+  </div>
+</div>
+<div class="favorites-content">
+  <button class="favorites-button__list"><i class="fa-solid fa-xmark"></i> Favorites</button>
+  <ul class="favorites-list"></ul>
 </div>
 <div class="favorites">
-    <button class="favorites-button"><i class="fa-solid fa-list"></i> Favorites</button>
+  <button class="favorites-button"><i class="fa-solid fa-list"></i> Favorites</button>
 </div>
 <div class="footer">
-    Made using <a href="https://sv443.net/jokeapi/v2/"> JokeAPI</a>
+  Made using <a href="https://sv443.net/jokeapi/v2/"> JokeAPI</a>
 </div>
 </body>
 </html>

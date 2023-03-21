@@ -7,11 +7,27 @@ const feedbackButtons = document.querySelector('.feedback-buttons');
 const feedbackDiv = document.querySelector('.feedback')
 const likeButton = document.querySelector('.vote--up');
 const dislikeButton = document.querySelector('.vote--down');
-const toFavoriteButton = document.querySelector('.fa-heart');
+const toFavoriteButton = document.querySelector('.fa-star');
+const favoritesListButton = document.querySelector('.favorites-button');
+const favoritesCloseListButton = document.querySelector('.favorites-button__list');
+const content = document.querySelector('.content');
+const favoritesContent = document.querySelector('.favorites-content');
+const favoritesList = document.querySelector('.favorites-list')
 const url = 'https://v2.jokeapi.dev/joke/any';
 let isDark = true;
 let isPositivePressed = false;
 let isNegativePressed = false;
+let currentJoke = {};
+
+let favorites = [];
+
+// let jokeObj = {
+// 	id: '123',
+// 	text: 'Hello world!',
+//  isSafe: false,
+// 	isLiked: true,
+// 	isDisliked: false,
+// };
 
 function radioButtonsHandler(event) {
 	let target = event.target;
@@ -25,13 +41,19 @@ function radioButtonsHandler(event) {
 }
 
 function placeJoke(data) {
+	jokeText.dataset.id = data.id;
+	jokeText.dataset.safe = data.safe;
 	if (data.type === 'twopart') {
+		currentJoke.text = `${data.setup}\n${data.delivery}`;
 		let time = data.setup.split(' ').length * 190;
 		jokeText.innerText = `${data.setup}\n.....`;
 		setTimeout(() => jokeText.innerText = `${data.setup}\n${data.delivery}`, time);
 	} else {
 		jokeText.innerText = data.joke;
+		currentJoke.text = data.joke;
 	}
+	currentJoke.id = data.id;
+	currentJoke.isSafe = data.safe;
 	setTimeout(() => enterButton.innerText = 'Next joke >>', 700);
 	setTimeout(() => feedbackDiv.classList.toggle('show'), 1300);
 }
@@ -47,10 +69,10 @@ function fetchJoke() {
 		feedbackDiv.classList.toggle('show');
 	}
 	let addr = url;
+	currentJoke = {};
 	if (!isDark) {
 		addr += '?safe-mode';
 	}
-	console.log('style = ', jokeText.style.display)
 	if (!jokeText.classList.contains('show')) {
 		jokeText.classList.add('show');
 	}
@@ -87,10 +109,42 @@ function feedbackHandler(event) {
 	}
 }
 
+function addJokeToFavoriteList(jokeObj) {
+	let li = document.createElement('li');
+	li.innerText = jokeObj.text;
+	li.dataset.id = jokeObj.id;
+	favoritesList.appendChild(li);
+}
+
 function addToFavoriteHandler(event) {
 	console.log('favorite');
 	let ev = event.target;
-	toFavoriteButton.classList.toggle('fa-solid');
+	if (toFavoriteButton.classList.contains('fa-regular')) {
+		toFavoriteButton.classList.add('fa-solid');
+		toFavoriteButton.classList.remove('fa-regular');
+		if (isInFavorites(currentJoke)) {
+			return;
+		}
+		favorites.push(currentJoke);
+		addJokeToFavoriteList(currentJoke);
+	} else {
+		toFavoriteButton.classList.add('fa-regular');
+		toFavoriteButton.classList.remove('fa-solid');
+		favorites.pop();
+	}
+}
+
+function showFavorites(event) {
+	content.style.display = 'none';
+	favoritesContent.style.display = 'flex';
+	favoritesListButton.style.display = 'none';
+
+}
+
+function closeFavorites(event) {
+	content.style.display = 'flex';
+	favoritesContent.style.display = 'none';
+	favoritesListButton.style.display = 'block';
 }
 
 enterButton.addEventListener('click', fetchJoke);
@@ -105,6 +159,21 @@ yesButton.addEventListener("click", (event) => {
 feedbackButtons.addEventListener('click', feedbackHandler);
 
 toFavoriteButton.addEventListener('click', addToFavoriteHandler);
+favoritesListButton.addEventListener('click', showFavorites);
+favoritesCloseListButton.addEventListener('click', closeFavorites);
+
+// actions on page load:
+document.addEventListener('DOMContentLoaded', () => {
+	if (JSON.parse(localStorage.getItem('favorites'))) {
+		favorites = JSON.parse(localStorage.getItem('favorites'));
+	}
+	favorites.forEach((elem) => addJokeToFavoriteList(elem));
+})
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//
+// })
 
 
 // function showMessage() {

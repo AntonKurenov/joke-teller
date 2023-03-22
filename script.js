@@ -139,11 +139,15 @@ function addToFavoriteHandler(event) {
 		}
 		favorites.push(currentJoke);
 		addJokeToFavoriteList(currentJoke);
+		showMessage('Joke added to Favorites!');
 	} else {
 		toFavoriteButton.classList.add('fa-regular');
 		toFavoriteButton.classList.remove('fa-solid');
 		favorites.pop();
-		favoritesList.children[0].remove();
+		if (isInFavorites(currentJoke)) {
+			favoritesList.children[0].remove();
+			showMessage('Joke removed from Favorites!');
+		}
 	}
 }
 
@@ -161,27 +165,13 @@ function closeFavorites(event) {
 
 function favoritesListClickHandle(event) {
 	let target = event.target;
-	console.log('aaaa');
 	if (target.tagName === 'I') {
 		let jokeId = target.parentElement.dataset.id;
 		removeFromFavorites(jokeId);
 		target.parentElement.remove();
+		showMessage('Joke removed from Favorites!');
 	}
 }
-
-// function showMessage(message) {
-// 	if (cheeringPopup.classList.contains('show')) {
-// 		return ;
-// 	}
-// 	let text = motivationPhrases[Math.floor(Math.random() * motivationPhrases.length)];
-// 	cheeringPopup.innerText = text;
-// 	// let elemWidth = cheeringPopup.offsetWidth;
-// 	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
-// 	cheeringPopup.classList.toggle('show');
-// 	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
-
-
-
 
 enterButton.addEventListener('click', fetchJoke);
 
@@ -206,21 +196,3 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 	favorites.forEach((elem) => addJokeToFavoriteList(elem));
 })
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//
-// })
-
-
-// function showMessage() {
-// 	if (cheeringPopup.classList.contains('show')) {
-// 		return ;
-// 	}
-// 	let text = motivationPhrases[Math.floor(Math.random() * motivationPhrases.length)];
-// 	cheeringPopup.innerText = text;
-// 	// let elemWidth = cheeringPopup.offsetWidth;
-// 	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
-// 	cheeringPopup.classList.toggle('show');
-// 	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
-// }

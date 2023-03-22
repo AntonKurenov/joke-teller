@@ -1,4 +1,5 @@
-console.log('test here');
+// console.log('test here');
+const cheeringPopup = document.querySelector('.window-message');
 
 function isInFavorites(joke) {
 	for (const arrJoke of favorites) {
@@ -18,6 +19,16 @@ function removeFromFavorites(jokeId) {
 		favoritesTmp.push(joke);
 	}
 	favorites = favoritesTmp;
+}
+
+function showMessage(message) {
+	if (cheeringPopup.classList.contains('show')) {
+		return;
+	}
+	cheeringPopup.innerText = message;
+	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
+	cheeringPopup.classList.toggle('show');
+	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
 }
 
 function refreshFavoritesInLS() {

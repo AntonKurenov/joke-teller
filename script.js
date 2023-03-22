@@ -48,14 +48,22 @@ function placeJoke(data) {
 		let time = data.setup.split(' ').length * 190;
 		jokeText.innerText = `${data.setup}\n.....`;
 		setTimeout(() => jokeText.innerText = `${data.setup}\n${data.delivery}`, time);
+		setTimeout(() => feedbackDiv.classList.toggle('show'), time + 800);
 	} else {
 		jokeText.innerText = data.joke;
 		currentJoke.text = data.joke;
+		setTimeout(() => feedbackDiv.classList.toggle('show'), 1300);
 	}
 	currentJoke.id = data.id;
 	currentJoke.isSafe = data.safe;
 	setTimeout(() => enterButton.innerText = 'Next joke >>', 700);
-	setTimeout(() => feedbackDiv.classList.toggle('show'), 1300);
+	if (isInFavorites(currentJoke)) {
+		toFavoriteButton.classList.remove('fa-regular');
+		toFavoriteButton.classList.add('fa-solid');
+	} else {
+		toFavoriteButton.classList.remove('fa-solid');
+		toFavoriteButton.classList.add('fa-regular');
+	}
 }
 
 function placeError(error) {
@@ -110,10 +118,14 @@ function feedbackHandler(event) {
 }
 
 function addJokeToFavoriteList(jokeObj) {
-	let li = document.createElement('li');
-	li.innerText = jokeObj.text;
-	li.dataset.id = jokeObj.id;
-	favoritesList.appendChild(li);
+	let jokeElem = document.createElement('div');
+	let icon = document.createElement('i');
+	icon.classList.add('fa-star', 'fa-solid');
+	jokeElem.innerText = jokeObj.text;
+	jokeElem.dataset.id = jokeObj.id;
+	jokeElem.classList.add('favorites-element');
+	jokeElem.appendChild(icon);
+	favoritesList.appendChild(jokeElem);
 }
 
 function addToFavoriteHandler(event) {
@@ -131,6 +143,7 @@ function addToFavoriteHandler(event) {
 		toFavoriteButton.classList.add('fa-regular');
 		toFavoriteButton.classList.remove('fa-solid');
 		favorites.pop();
+		favoritesList.children[0].remove();
 	}
 }
 
@@ -138,7 +151,6 @@ function showFavorites(event) {
 	content.style.display = 'none';
 	favoritesContent.style.display = 'flex';
 	favoritesListButton.style.display = 'none';
-
 }
 
 function closeFavorites(event) {
@@ -146,6 +158,30 @@ function closeFavorites(event) {
 	favoritesContent.style.display = 'none';
 	favoritesListButton.style.display = 'block';
 }
+
+function favoritesListClickHandle(event) {
+	let target = event.target;
+	console.log('aaaa');
+	if (target.tagName === 'I') {
+		let jokeId = target.parentElement.dataset.id;
+		removeFromFavorites(jokeId);
+		target.parentElement.remove();
+	}
+}
+
+// function showMessage(message) {
+// 	if (cheeringPopup.classList.contains('show')) {
+// 		return ;
+// 	}
+// 	let text = motivationPhrases[Math.floor(Math.random() * motivationPhrases.length)];
+// 	cheeringPopup.innerText = text;
+// 	// let elemWidth = cheeringPopup.offsetWidth;
+// 	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
+// 	cheeringPopup.classList.toggle('show');
+// 	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
+
+
+
 
 enterButton.addEventListener('click', fetchJoke);
 
@@ -161,6 +197,7 @@ feedbackButtons.addEventListener('click', feedbackHandler);
 toFavoriteButton.addEventListener('click', addToFavoriteHandler);
 favoritesListButton.addEventListener('click', showFavorites);
 favoritesCloseListButton.addEventListener('click', closeFavorites);
+favoritesContent.addEventListener('click', favoritesListClickHandle);
 
 // actions on page load:
 document.addEventListener('DOMContentLoaded', () => {

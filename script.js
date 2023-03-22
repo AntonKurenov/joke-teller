@@ -3,13 +3,31 @@ const yesButton = document.querySelector('.button-yes');
 const radioOptions = document.querySelector('.radio-group');
 const enterButton = document.querySelector('.button-enter');
 const jokeText = document.querySelector('.text');
-const feedbackButtons = document.querySelector('.feedback');
+const feedbackButtons = document.querySelector('.feedback-buttons');
+const feedbackDiv = document.querySelector('.feedback')
 const likeButton = document.querySelector('.vote--up');
 const dislikeButton = document.querySelector('.vote--down');
+const toFavoriteButton = document.querySelector('.fa-star');
+const favoritesListButton = document.querySelector('.favorites-button');
+const favoritesCloseListButton = document.querySelector('.favorites-button__list');
+const content = document.querySelector('.content');
+const favoritesContent = document.querySelector('.favorites-content');
+const favoritesList = document.querySelector('.favorites-list')
 const url = 'https://v2.jokeapi.dev/joke/any';
 let isDark = true;
 let isPositivePressed = false;
 let isNegativePressed = false;
+let currentJoke = {};
+
+let favorites = [];
+
+// let jokeObj = {
+// 	id: '123',
+// 	text: 'Hello world!',
+//  isSafe: false,
+// 	isLiked: true,
+// 	isDisliked: false,
+// };
 
 function radioButtonsHandler(event) {
 	let target = event.target;
@@ -23,15 +41,29 @@ function radioButtonsHandler(event) {
 }
 
 function placeJoke(data) {
+	jokeText.dataset.id = data.id;
+	jokeText.dataset.safe = data.safe;
 	if (data.type === 'twopart') {
+		currentJoke.text = `${data.setup}\n${data.delivery}`;
 		let time = data.setup.split(' ').length * 190;
 		jokeText.innerText = `${data.setup}\n.....`;
 		setTimeout(() => jokeText.innerText = `${data.setup}\n${data.delivery}`, time);
+		setTimeout(() => feedbackDiv.classList.toggle('show'), time + 800);
 	} else {
 		jokeText.innerText = data.joke;
+		currentJoke.text = data.joke;
+		setTimeout(() => feedbackDiv.classList.toggle('show'), 1300);
 	}
+	currentJoke.id = data.id;
+	currentJoke.isSafe = data.safe;
 	setTimeout(() => enterButton.innerText = 'Next joke >>', 700);
-	setTimeout(() => feedbackButtons.classList.toggle('show'), 1300);
+	if (isInFavorites(currentJoke)) {
+		toFavoriteButton.classList.remove('fa-regular');
+		toFavoriteButton.classList.add('fa-solid');
+	} else {
+		toFavoriteButton.classList.remove('fa-solid');
+		toFavoriteButton.classList.add('fa-regular');
+	}
 }
 
 function placeError(error) {
@@ -41,14 +73,14 @@ function placeError(error) {
 }
 
 function fetchJoke() {
-	if (feedbackButtons.classList.contains('show')) {
-		feedbackButtons.classList.toggle('show');
+	if (feedbackDiv.classList.contains('show')) {
+		feedbackDiv.classList.toggle('show');
 	}
 	let addr = url;
+	currentJoke = {};
 	if (!isDark) {
 		addr += '?safe-mode';
 	}
-	console.log('style = ', jokeText.style.display)
 	if (!jokeText.classList.contains('show')) {
 		jokeText.classList.add('show');
 	}
@@ -85,6 +117,72 @@ function feedbackHandler(event) {
 	}
 }
 
+function addJokeToFavoriteList(jokeObj) {
+	let jokeElem = document.createElement('div');
+	let icon = document.createElement('i');
+	icon.classList.add('fa-star', 'fa-solid');
+	jokeElem.innerText = jokeObj.text;
+	jokeElem.dataset.id = jokeObj.id;
+	jokeElem.classList.add('favorites-element');
+	jokeElem.appendChild(icon);
+	favoritesList.appendChild(jokeElem);
+}
+
+function addToFavoriteHandler(event) {
+	console.log('favorite');
+	let ev = event.target;
+	if (toFavoriteButton.classList.contains('fa-regular')) {
+		toFavoriteButton.classList.add('fa-solid');
+		toFavoriteButton.classList.remove('fa-regular');
+		if (isInFavorites(currentJoke)) {
+			return;
+		}
+		favorites.push(currentJoke);
+		addJokeToFavoriteList(currentJoke);
+	} else {
+		toFavoriteButton.classList.add('fa-regular');
+		toFavoriteButton.classList.remove('fa-solid');
+		favorites.pop();
+		favoritesList.children[0].remove();
+	}
+}
+
+function showFavorites(event) {
+	content.style.display = 'none';
+	favoritesContent.style.display = 'flex';
+	favoritesListButton.style.display = 'none';
+}
+
+function closeFavorites(event) {
+	content.style.display = 'flex';
+	favoritesContent.style.display = 'none';
+	favoritesListButton.style.display = 'block';
+}
+
+function favoritesListClickHandle(event) {
+	let target = event.target;
+	console.log('aaaa');
+	if (target.tagName === 'I') {
+		let jokeId = target.parentElement.dataset.id;
+		removeFromFavorites(jokeId);
+		target.parentElement.remove();
+	}
+}
+
+// function showMessage(message) {
+// 	if (cheeringPopup.classList.contains('show')) {
+// 		return ;
+// 	}
+// 	let text = motivationPhrases[Math.floor(Math.random() * motivationPhrases.length)];
+// 	cheeringPopup.innerText = text;
+// 	// let elemWidth = cheeringPopup.offsetWidth;
+// 	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
+// 	cheeringPopup.classList.toggle('show');
+// 	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
+
+
+
+
 enterButton.addEventListener('click', fetchJoke);
 
 radioOptions.addEventListener('click', radioButtonsHandler);
@@ -95,3 +193,34 @@ yesButton.addEventListener("click", (event) => {
 })
 
 feedbackButtons.addEventListener('click', feedbackHandler);
+
+toFavoriteButton.addEventListener('click', addToFavoriteHandler);
+favoritesListButton.addEventListener('click', showFavorites);
+favoritesCloseListButton.addEventListener('click', closeFavorites);
+favoritesContent.addEventListener('click', favoritesListClickHandle);
+
+// actions on page load:
+document.addEventListener('DOMContentLoaded', () => {
+	if (JSON.parse(localStorage.getItem('favorites'))) {
+		favorites = JSON.parse(localStorage.getItem('favorites'));
+	}
+	favorites.forEach((elem) => addJokeToFavoriteList(elem));
+})
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//
+// })
+
+
+// function showMessage() {
+// 	if (cheeringPopup.classList.contains('show')) {
+// 		return ;
+// 	}
+// 	let text = motivationPhrases[Math.floor(Math.random() * motivationPhrases.length)];
+// 	cheeringPopup.innerText = text;
+// 	// let elemWidth = cheeringPopup.offsetWidth;
+// 	cheeringPopup.style.left = `${window.innerWidth / 2 - cheeringPopup.offsetWidth / 2}px`
+// 	cheeringPopup.classList.toggle('show');
+// 	setTimeout(() => cheeringPopup.classList.toggle('show'), 1500);
+// }

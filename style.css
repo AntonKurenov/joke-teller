@@ -46,6 +46,7 @@ button {
     background-color: gold;
     border-radius: 4px;
     font-size: 2.3rem;
+    cursor: pointer;
 }
 
 .explicit-option {
@@ -109,7 +110,7 @@ label {
 
 .feedback {
     display: none;
-    justify-content: center;
+    justify-content: space-around;
     margin: 10px 0;
 }
 .feedback.show {
@@ -135,9 +136,52 @@ label {
     background-color: firebrick;
 }
 
+.fa-star {
+    font-size: 4rem;
+    cursor: pointer;
+}
+
+.favorites {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.favorites-content {
+    display: none;
+    flex-direction: column;
+    flex: 1 0 auto;
+    align-items: center;
+}
+
+.favorites-button__list {
+    width: max-content;
+    padding: 0 20px;
+    margin: 10px 0 5px 0;
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 2.5rem;
+}
+
+.favorites-element {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
 .footer {
     text-align: center;
-    background-color: #737a7a;
+    background-color: #5f6464;
     padding: 10px;
     font-weight: bold;
     color: #f3d0d0;

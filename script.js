@@ -1,14 +1,18 @@
-const explicitOptions = document.querySelector(".explicit-option");
-const yesButton = document.querySelector('.button-yes');
-const radioOptions = document.querySelector('.radio-group');
 const enterButton = document.querySelector('.button-enter');
 const jokeText = document.querySelector('.text');
+const feedbackDiv = document.querySelector('.feedback')
+const likeButton = document.querySelector('.vote--up');
+const dislikeButton = document.querySelector('.vote--down');
 const toFavoriteButton = document.querySelector('.fa-star');
 const favoritesListButton = document.querySelector('.favorites-button');
 const favoritesCloseListButton = document.querySelector('.favorites-button__list');
 const content = document.querySelector('.content');
 const favoritesContent = document.querySelector('.favorites-content');
-const favoritesList = document.querySelector('.favorites-list')
+const favoritesList = document.querySelector('.favorites-list');
+
+const tooltipIcon = document.querySelector('.fa-question');
+const tooltipText = document.querySelector('.tooltip-text');
+
 const url = 'https://v2.jokeapi.dev/joke/any';
 let isDark = true;
 let currentJoke;
@@ -153,16 +157,6 @@ function favoritesListClickHandle(event) {
 	}
 }
 
-enterButton.addEventListener('click', fetchJoke);
-
-radioOptions.addEventListener('click', radioButtonsHandler);
-
-yesButton.addEventListener("click", (event) => {
-	explicitOptions.style.display = 'flex';
-	yesButton.style.backgroundColor = 'green';
-})
-
-
 toFavoriteButton.addEventListener('click', addToFavoriteHandler);
 favoritesListButton.addEventListener('click', showFavorites);
 favoritesCloseListButton.addEventListener('click', closeFavorites);
@@ -178,4 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		favorites = JSON.parse(localStorage.getItem('favorites'));
 	}
 	favorites.forEach((elem) => addJokeToFavoriteList(elem));
+})
+
+tooltipIcon.addEventListener('mouseover', () => {
+	tooltipText.style.display = 'flex';
+})
+
+tooltipIcon.addEventListener('mouseleave', () => {
+	tooltipText.style.display = 'none';
 })

@@ -16,35 +16,26 @@
   Joke Teller
 </div>
 <div class="content">
-  <div class="options-module">
-    <div class="question">Wanna joke?</div>
-    <div class="button-row">
-      <button class="button-yes">Yes</button>
-      <button class="button-no">No</button>
-    </div>
-    <div class="explicit-option">
-      <div class="explicit-question">Dark humour jokes included?</div>
-      <div class="radio-group">
-        <label for="radio-yes"><input type="radio" name="radio" value="radio-yes" id="radio-yes">Yes</label>
-        <label for="radio-no"><input type="radio" name="radio" value="radio-no" id="radio-no">No, thanks</label>
-      </div>
-    </div>
-  </div>
-  <div class="last-button">
-    <button class="button-enter">
-      Let's go!
-    </button>
-  </div>
-  <div class="joke-text">
-    <p class="text" data-id="" data-safe=""></p>
-  </div>
-  <div class="feedback">
-    <div class="feedback-buttons">
-      <button class="vote vote--up" name="answer" value="like">^‿^</button>
-      <button class="vote vote--down" type="button" value="dislike">ˇ_ˇ</button>
-    </div>
+  <div class="favorite-icon">
     <i class="fa-regular fa-star"></i>
   </div>
+  <div class="joke">
+    <div class="joke-text">
+      Your joke is waiting. Choose the options below
+    </div>
+  </div>
+  <div class="options">
+    <button class="button safe-option">Safe Joke</button>
+    <button class="button unsafe-option">Unsafe Joke</button>
+    <div class="tooltip">
+      <span class="tooltip-text">
+        Safe Joke is a joke for everyone. Unsafe Jokes
+        includes jokes with dark humour.
+      </span>
+      <i class="fa-solid fa-question"></i>
+    </div>
+  </div>
+</div>
 </div>
 <div class="favorites-content">
   <button class="favorites-button__list"><i class="fa-solid fa-xmark"></i> Favorites</button>

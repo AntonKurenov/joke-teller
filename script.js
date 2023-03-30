@@ -1,14 +1,11 @@
-const enterButton = document.querySelector('.button-enter');
-const jokeText = document.querySelector('.text');
-const feedbackDiv = document.querySelector('.feedback')
-const likeButton = document.querySelector('.vote--up');
-const dislikeButton = document.querySelector('.vote--down');
+const jokeText = document.querySelector('.joke-text');
 const toFavoriteButton = document.querySelector('.fa-star');
 const favoritesListButton = document.querySelector('.favorites-button');
 const favoritesCloseListButton = document.querySelector('.favorites-button__list');
 const content = document.querySelector('.content');
 const favoritesContent = document.querySelector('.favorites-content');
 const favoritesList = document.querySelector('.favorites-list');
+const getJokeButtons = document.querySelector('.options');
 
 const tooltipIcon = document.querySelector('.fa-question');
 const tooltipText = document.querySelector('.tooltip-text');
@@ -27,35 +24,15 @@ let favorites = [];
 // 	isDisliked: false,
 // };
 
-function radioButtonsHandler(event) {
-	let target = event.target;
-	if (target.tagName !== 'INPUT') {
-		return;
-	}
-	currentJoke.isDark = target.value === 'radio-yes';
-	if (!enterButton.classList.contains('show')) {
-		enterButton.classList.add('show');
-	}
-}
-
 function placeJoke(joke) {
-	// jokeText.dataset.id = data.id;
-	// jokeText.dataset.safe = data.safe;
-	// jokeText.dataset.text = data.joke;
-	if (joke.type === 'twopart') {
+	if (joke.twopart) {
 		currentJoke.text = `${joke.setup}\n${joke.delivery}`;
 		let time = joke.setup.split(' ').length * 190;
 		jokeText.innerText = `${joke.setup}\n.....`;
 		setTimeout(() => jokeText.innerText = `${joke.setup}\n${joke.delivery}`, time);
-		setTimeout(() => feedbackDiv.classList.toggle('show'), time + 800);
 	} else {
-		jokeText.innerText = joke.joke;
-		currentJoke.text = joke.joke;
-		setTimeout(() => feedbackDiv.classList.toggle('show'), 1300);
+		jokeText.innerText = joke.text;
 	}
-	currentJoke.id = joke.id;
-	currentJoke.isSafe = joke.safe;
-	setTimeout(() => enterButton.innerText = 'Next joke >>', 700);
 	if (isInFavorites(currentJoke)) {
 		toFavoriteButton.classList.remove('fa-regular');
 		toFavoriteButton.classList.add('fa-solid');
@@ -71,33 +48,33 @@ function placeError(error) {
 	console.log(error);
 }
 
-function controlFlow() {
-	currentJoke = new Joke();
-	fetchJoke();
-	joke.text = jokeText.innerText;
-}
-
-function fetchJoke() {
-	if (feedbackDiv.classList.contains('show')) {
-		feedbackDiv.classList.toggle('show');
+function controlFlow(event) {
+	if (event.target.tagName !== 'BUTTON') {
+		return ;
 	}
-	let addr = url;
-	currentJoke = {};
-	if (!isDark) {
-		addr += '?safe-mode';
-	}
-	if (!jokeText.classList.contains('show')) {
-		jokeText.classList.add('show');
+	if (event.target.classList.contains('safe-option')) {
+		currentJoke = new Joke({isDark: false,
+		url: url});
+	} else {
+		currentJoke = new Joke({isDark: true, url: url});
 	}
 	jokeText.innerText = 'Your joke is loading...';
-	fetch(addr)
-		.then((response) => {
+	fetchJoke(currentJoke);
+	// placeJoke(currentJoke);
+}
+
+function fetchJoke(joke) {
+	fetch(joke.url)
+		.then(response => {
 			if (!response.ok) {
 				throw new Error('Error occured!');
 			}
 			return response.json();
 		})
-		.then((data) => placeJoke(data))
+		.then((data) => {
+			joke.writeData(data);
+		})
+		.then(() => placeJoke(joke))
 		.catch((error) => placeError(error));
 }
 
@@ -164,15 +141,13 @@ favoritesContent.addEventListener('click', favoritesListClickHandle);
 
 // actions on page load:
 document.addEventListener('DOMContentLoaded', () => {
-	currentJoke = new Joke({
-		url: url,
-		isDark: isDark
-	});
 	if (JSON.parse(localStorage.getItem('favorites'))) {
 		favorites = JSON.parse(localStorage.getItem('favorites'));
 	}
 	favorites.forEach((elem) => addJokeToFavoriteList(elem));
 })
+
+getJokeButtons.addEventListener('click', controlFlow);
 
 tooltipIcon.addEventListener('mouseover', () => {
 	tooltipText.style.display = 'flex';
